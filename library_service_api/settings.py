@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "users",
     "books",
     "borrowings",
+    "notifications",
 
 ]
 # Add REST framework settings
