@@ -6,6 +6,9 @@ from borrowings.filters import BorrowingFilter
 from borrowings.models import Borrowing
 from borrowings.serializers import BorrowingReadSerializer, BorrowingCreateSerializer
 from django_filters import rest_framework as filters
+from django.utils import timezone
+from rest_framework.decorators import action
+
 
 
 class BorrowingViewSet(
@@ -36,3 +39,27 @@ class BorrowingViewSet(
         self.perform_create(serializer)
         read_serializer = BorrowingReadSerializer(instance=serializer.instance)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)
+
+    class BorrowingViewSet(...):
+        @action(
+            methods=["POST"],
+            detail=True,
+            url_path="return",
+            url_name="return-borrowing",
+        )
+        def return_borrowing(self, request, pk=None):
+            borrowing = self.get_object()
+            if borrowing.actual_return_date:
+                return Response(
+                    {"detail": "This borrowing has already been returned."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            borrowing.actual_return_date = timezone.now().date()
+            borrowing.book.inventory += 1
+            borrowing.book.save()
+            borrowing.save()
+
+            serializer = self.get_serializer(borrowing)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
