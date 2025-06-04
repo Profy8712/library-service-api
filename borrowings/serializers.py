@@ -19,3 +19,13 @@ class BorrowingReadSerializer(serializers.ModelSerializer):
             "book",
             "user",
         ]
+
+class BorrowingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borrowing
+        fields = ["book", "expected_return_date"]
+
+    def validate_book(self, value):
+        if value.inventory < 1:
+            raise serializers.ValidationError("This book is not available.")
+        return value
