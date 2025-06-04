@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
-
+    "users",
+    "books",
 
 ]
 # Add REST framework settings
