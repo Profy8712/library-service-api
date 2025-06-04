@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "users",
     "books",
+    "borrowings",
 
 ]
 # Add REST framework settings
