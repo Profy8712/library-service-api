@@ -2,9 +2,10 @@ from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
+from borrowings.filters import BorrowingFilter
 from borrowings.models import Borrowing
 from borrowings.serializers import BorrowingReadSerializer, BorrowingCreateSerializer
+from django_filters import rest_framework as filters
 
 
 class BorrowingViewSet(
@@ -15,6 +16,8 @@ class BorrowingViewSet(
 ):
     queryset = Borrowing.objects.select_related("book", "user")
     permission_classes = [IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = BorrowingFilter
 
     def get_serializer_class(self):
         if self.action == "create":
